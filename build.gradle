@@ -1,0 +1,26 @@
+plugins {
+    id("net.ltgt.errorprone") version "0.6"
+}
+
+apply plugin: 'java'
+
+sourceCompatibility = 10
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+    errorprone group: 'com.google.errorprone', name: 'error_prone_core', version: '2.3.2'
+    annotationProcessor group: 'com.uber.nullaway', name: 'nullaway', version: '0.6.0'
+}
+
+import net.ltgt.gradle.errorprone.CheckSeverity
+
+tasks.withType(JavaCompile) {
+    options.errorprone {
+        check("NullAway", CheckSeverity.ERROR)
+        option("NullAway:AnnotatedPackages", "src")
+    }
+}
